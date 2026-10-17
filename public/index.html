@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>iPhone-iOS-XMD | Pair Session</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📱 iPhone-iOS-XMD</h1>
+      <p class="subtitle">by Simon Tech Inc</p>
+    </div>
+
+    <div class="status-card">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Connecting to bot...</span>
+    </div>
+
+    <div class="info-box">
+      <div class="info-row">
+        <span>Owner</span>
+        <strong id="ownerName">Simon Tech Inc</strong>
+      </div>
+      <div class="info-row">
+        <span>Number</span>
+        <strong id="ownerNumber">2348071569915</strong>
+      </div>
+      <div class="info-row">
+        <span>Prefix</span>
+        <strong id="prefix">.</strong>
+      </div>
+    </div>
+
+    <!-- PAIRING CODE -->
+    <div class="card" id="pairingCard" style="display: none;">
+      <h2>🔑 Pairing Code</h2>
+      <div class="code-display" id="pairingCode">--------</div>
+      <p class="instruction">
+        1. Open <strong>WhatsApp</strong><br>
+        2. Go to <strong>Linked Devices</strong><br>
+        3. Tap <strong>"Link with phone number instead"</strong><br>
+        4. Enter the code above
+      </p>
+    </div>
+
+    <!-- QR CODE -->
+    <div class="card" id="qrCard" style="display: none;">
+      <h2>📷 Scan QR Code</h2>
+      <div class="qr-wrapper">
+        <img id="qrImage" alt="QR Code" />
+      </div>
+      <p class="instruction">
+        WhatsApp → <strong>Linked Devices</strong> → Scan QR Code
+      </p>
+    </div>
+
+    <!-- CONNECTED -->
+    <div class="card success" id="connectedCard" style="display: none;">
+      <h2>✅ Bot is Online</h2>
+      <p>Session linked successfully!<br>You can now use the bot.</p>
+      <p class="small">Try sending <strong>.menu</strong></p>
+    </div>
+
+    <!-- WAITING -->
+    <div class="card" id="waitingCard">
+      <h2>⏳ Waiting for Pairing</h2>
+      <p>Start the bot with one of these:</p>
+      <code>node index.js --pairing-code</code>
+      <p class="small">or</p>
+      <code>node index.js --qr</code>
+      <p class="small" style="margin-top:14px">Then refresh this page</p>
+    </div>
+
+    <footer>
+      Powered by <strong>Simon Tech Inc</strong><br>
+      <span class="version">iPhone-iOS-XMD • Multi-Device</span>
+    </footer>
+  </div>
+
+  <script>
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const pairingCard = document.getElementById('pairingCard');
+    const qrCard = document.getElementById('qrCard');
+    const connectedCard = document.getElementById('connectedCard');
+    const waitingCard = document.getElementById('waitingCard');
+
+    function hideAll() {
+      pairingCard.style.display = 'none';
+      qrCard.style.display = 'none';
+      connectedCard.style.display = 'none';
+      waitingCard.style.display = 'none';
+    }
+
+    async function refresh() {
+      try {
+        const res = await fetch('/api/status?t=' + Date.now());
+        const data = await res.json();
+
+        document.getElementById('ownerName').textContent = data.owner || 'Simon Tech Inc';
+        document.getElementById('ownerNumber').textContent = data.ownerNumber || '2348071569915';
+        document.getElementById('prefix').textContent = data.prefix || '.';
+        statusText.textContent = data.status || 'Unknown';
+
+        hideAll();
+
+        if (data.isConnected) {
+          statusDot.className = 'status-dot online';
+          connectedCard.style.display = 'block';
+        } else if (data.pairingCode) {
+          statusDot.className = 'status-dot waiting';
+          document.getElementById('pairingCode').textContent = data.pairingCode;
+          pairingCard.style.display = 'block';
+        } else if (data.hasQR) {
+          statusDot.className = 'status-dot waiting';
+          qrCard.style.display = 'block';
+          const qrRes = await fetch('/api/qr?t=' + Date.now());
+          const qrData = await qrRes.json();
+          if (qrData.qr) document.getElementById('qrImage').src = qrData.qr;
+        } else {
+          statusDot.className = 'status-dot offline';
+          waitingCard.style.display = 'block';
+        }
+      } catch (e) {
+        statusDot.className = 'status-dot offline';
+        statusText.textContent = 'Bot not running';
+        hideAll();
+        waitingCard.style.display = 'block';
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 2500);
+  </script>
+</body>
+  </html>
