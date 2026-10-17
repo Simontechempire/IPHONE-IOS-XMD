@@ -1,0 +1,28 @@
+{
+  "name": "iphone-ios-xmd",
+  "version": "1.0.0",
+  "description": "iPhone-iOS-XMD - Multi-Device WhatsApp Bot by Simon Tech Inc | 500+ Command Ready",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "pair": "node index.js --pairing-code",
+    "qr": "node index.js --qr"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.16",
+    "pino": "^9.4.0",
+    "qrcode-terminal": "^0.12.0",
+    "qrcode": "^1.5.4",
+    "dotenv": "^16.4.5",
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.2.0",
+    "moment-timezone": "^0.5.45",
+    "express": "^4.21.0",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Simon Tech Inc",
+  "license": "MIT"
+}
