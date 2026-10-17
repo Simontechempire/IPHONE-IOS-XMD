@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: iphone-ios-xmd
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: OWNER_NUMBER
+        value: "2348071569915"
+      - key: BOT_NAME
+        value: "iPhone-iOS-XMD"
+      - key: PREFIX
+        value: "."
+      - key: BOT_NUMBER
+        value: "2348071569915"
