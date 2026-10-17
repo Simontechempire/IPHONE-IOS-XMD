@@ -1,0 +1,11 @@
+node_modules/
+session/
+*.log
+.env
+.DS_Store
+.wwebjs_auth/
+.wwebjs_cache/
+auth_info*/
+*.session
+.idea/
+.vscode/
