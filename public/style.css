@@ -2,7 +2,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
   color: #fff;
   min-height: 100vh;
   display: flex;
@@ -13,78 +13,122 @@ body {
 
 .container {
   width: 100%;
-  max-width: 420px;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(16px);
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 32px 24px;
+  max-width: 400px;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 28px 22px;
   text-align: center;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.45);
 }
 
 .header h1 {
-  font-size: 1.9rem;
+  font-size: 1.85rem;
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
-.subtitle { font-size: 0.9rem; opacity: 0.75; margin-bottom: 24px; }
+.subtitle { font-size: 0.9rem; opacity: 0.7; margin-bottom: 22px; }
 
 .status-card {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: rgba(0,0,0,0.25);
-  padding: 12px 18px;
+  background: rgba(0,0,0,0.3);
+  padding: 11px 18px;
   border-radius: 50px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  font-size: 0.92rem;
 }
 
 .status-dot {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: #888;
+  background: #777;
 }
-.status-dot.online { background: #00ff88; box-shadow: 0 0 10px #00ff88; }
-.status-dot.waiting { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
+.status-dot.online { background: #00ff88; box-shadow: 0 0 12px #00ff88; }
+.status-dot.waiting { background: #ffcc00; box-shadow: 0 0 12px #ffcc00; animation: pulse 1.5s infinite; }
 .status-dot.offline { background: #ff4444; }
 
-.info {
-  text-align: left;
-  background: rgba(0,0,0,0.2);
-  padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 24px;
-  font-size: 0.92rem;
-  line-height: 1.7;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
 
-.code-box {
-  font-size: 2.4rem;
-  font-weight: 700;
-  letter-spacing: 8px;
+.info-box {
+  background: rgba(0,0,0,0.25);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.9rem;
+}
+.info-row span { opacity: 0.7; }
+
+.card {
+  background: rgba(0,0,0,0.28);
+  border-radius: 18px;
+  padding: 22px 16px;
+  margin-bottom: 8px;
+}
+.card h2 { font-size: 1.15rem; margin-bottom: 16px; }
+.card.success {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.25);
+}
+
+.code-display {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 5px;
+  font-family: monospace;
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  padding: 16px;
-  background-color: rgba(0,0,0,0.3);
+  padding: 14px 8px;
+  margin-bottom: 16px;
+  background-color: rgba(0,0,0,0.35);
   border-radius: 14px;
-  margin-bottom: 12px;
-  font-family: monospace;
 }
 
-#qrImage {
-  width: 220px;
-  height: 220px;
-  border-radius: 12px;
-  background: white;
-  padding: 10px;
-  margin: 0 auto 12px;
+.qr-wrapper {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+#qrImage { width: 210px; height: 210px; display: block; }
+
+.instruction { font-size: 0.84rem; line-height: 1.65; opacity: 0.85; }
+.instruction strong { color: #00d2ff; }
+
+code {
+  display: inline-block;
+  background: rgba(0,0,0,0.4);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #00d2ff;
+  margin: 6px 0;
 }
 
-.hint { font-size: 0.82rem; opacity: 0.7; line-height: 1.5; }
-footer { margin-top: 28px; font-size: 0.8rem; opacity: 0.55; }
+.small { font-size: 0.8rem; opacity: 0.7; margin-top: 8px; }
+
+footer {
+  margin-top: 26px;
+  font-size: 0.8rem;
+  opacity: 0.55;
+  line-height: 1.5;
+                     }
