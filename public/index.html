@@ -6,6 +6,32 @@
   <title>iPhone-iOS-XMD • iPhone 18 pro max</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* CONTROL CENTER ADDON - Matches your fashion style */
+    .control-card{margin-top:20px}
+    .control-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+    .control-header h2{font-size:18px}
+    .live-badge{background:linear-gradient(90deg,#f6d365,#fda085);color:black;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800}
+    .cat-toggle{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin:8px 0;backdrop-filter:blur(10px)}
+    .cat-left{display:flex;gap:10px;align-items:center}
+    .cat-icon{width:36px;height:36px;background:rgba(246,211,101,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .cat-info b{display:block;font-size:14px}
+    .cat-info small{color:#8e8e93;font-size:11px}
+    .switch{position:relative;width:52px;height:30px}
+    .switch input{opacity:0;width:0;height:0}
+    .slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#3a3a3c;border-radius:30px;transition:.3s;cursor:pointer}
+    .slider:before{content:"";position:absolute;height:26px;width:26px;left:2px;bottom:2px;background:white;border-radius:50%;transition:.3s}
+    input:checked + .slider{background:linear-gradient(90deg,#f6d365,#fda085)}
+    input:checked + .slider:before{transform:translateX(22px)}
+    .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .quick-item{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center}
+    .quick-item span{font-size:12px;font-weight:600}
+    .quick-item .switch{width:40px;height:22px}
+    .quick-item .slider:before{width:18px;height:18px}
+    .quick-item input:checked + .slider:before{transform:translateX(18px)}
+    .all-btns{display:flex;gap:10px;margin:12px 0}
+    .all-btns button{flex:1;padding:12px;border-radius:12px;border:none;font-weight:800;font-size:13px;cursor:pointer}
+  </style>
 </head>
 <body>
   <div class="bg-blob blob1"></div>
@@ -51,17 +77,14 @@
       <div class="card-icon">💎</div>
       <h2>Link Your Fashion Bot</h2>
       <p class="form-desc">Enter number with country code • Instant pairing</p>
-      
       <div class="input-wrapper">
         <span class="input-icon">📱</span>
         <input type="tel" id="phoneInput" placeholder="2348071569915" maxlength="15">
       </div>
-
       <button id="generateBtn" onclick="generateCode()">
         <span class="btn-text">Generate Pairing Code</span>
         <span class="btn-shine"></span>
       </button>
-      
       <div class="trust-row">
         <span>✓ Secure</span><span>✓ Encrypted</span><span>✓ Fashion Verified</span>
       </div>
@@ -75,7 +98,6 @@
       <div class="phone-pill">Number: <strong id="showPhone"></strong></div>
       <div class="code-display" id="pairingCode">--------</div>
       <div class="code-timer">Code expires in <span id="timer">60</span>s</div>
-      
       <div class="instruction-box">
         <div class="step"><b>1</b> Open WhatsApp</div>
         <div class="step"><b>2</b> Settings → Linked Devices</div>
@@ -83,7 +105,6 @@
         <div class="step"><b>4</b> Link with phone number</div>
         <div class="step active"><b>5</b> Enter code above</div>
       </div>
-
       <button class="secondary-btn" onclick="resetForm()">← Use Different Number</button>
       <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
     </div>
@@ -99,6 +120,28 @@
       </div>
     </div>
 
+    <!-- ===== NEW: COMMAND CONTROL CENTER ===== -->
+    <div class="card glass control-card">
+      <div class="control-header">
+        <h2>🎛️ Command Control</h2>
+        <span class="live-badge" id="controlLive">LIVE</span>
+      </div>
+      
+      <div class="all-btns">
+        <button style="background:#30d158;color:black" onclick="toggleAll(true)">ALL ON</button>
+        <button style="background:#ff453a;color:white" onclick="toggleAll(false)">ALL OFF</button>
+      </div>
+
+      <div id="categoriesList"></div>
+
+      <div style="margin-top:18px">
+        <b style="font-size:13px">⚡ Quick Toggles - Popular</b>
+        <div class="quick-grid" id="quickList"></div>
+      </div>
+
+      <p style="text-align:center;color:#8e8e93;font-size:10px;margin-top:15px">Changes apply instantly • No redeploy needed</p>
+    </div>
+
     <footer>
       <div class="footer-logo">Simon Tech Inc • iPhone-iOS-XMD</div>
       <div class="footer-links"><span>Fashion</span><span>•</span><span>Luxury</span><span>•</span><span>iOS</span></div>
@@ -107,6 +150,7 @@
 
 <script>
 let countdown;
+let controlData = {};
 function setTheme(t){
   document.body.className=t;
   document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
@@ -135,6 +179,62 @@ async function generateCode(){
   generateBtn.disabled=false; generateBtn.querySelector('.btn-text').textContent='Generate Pairing Code';
 }
 function resetForm(){ hideAll(); formCard.style.display='block'; document.getElementById('phoneInput').value=''; document.getElementById('statusText').textContent='Ready to pair'; document.getElementById('statusDot').className='status-dot'; clearInterval(countdown); }
+
+// === CONTROL CENTER LOGIC ===
+async function loadControl(){
+  try{
+    const r = await fetch('/api/control?t='+Date.now());
+    controlData = await r.json();
+    renderControl();
+  }catch{
+    document.getElementById('categoriesList').innerHTML='<div style="text-align:center;color:#8e8e93;padding:15px;font-size:12px">Backend not updated yet.<br>Add /api/control to connection.js</div>';
+  }
+}
+function renderControl(){
+  const cats = [
+    {id:'OWNER', icon:'👑', name:'Owner', desc:'mode, settings, block, antilink...'},
+    {id:'BOT', icon:'💻', name:'Bot', desc:'ping, alive, repo...'},
+    {id:'GROUP', icon:'👥', name:'Group', desc:'add, kick, tagall, welcome...'},
+    {id:'AI', icon:'🤖', name:'AI', desc:'ai, gpt, imagine, flux...'},
+    {id:'DOWNLOADER', icon:'📥', name:'Downloader', desc:'play, tiktok, fb...'},
+    {id:'AUDIO', icon:'🎚️', name:'Audio', desc:'bass, deep, tts...'},
+    {id:'CONVERTER', icon:'🎨', name:'Converter', desc:'sticker, toimg...'},
+    {id:'LOGO', icon:'🔤', name:'Logo Maker', desc:'fancy, gfx, neon...'},
+    {id:'TOOLS', icon:'🛠️', name:'Tools', desc:'ss, translate, weather...'},
+    {id:'GAMES', icon:'🎮', name:'Games', desc:'trivia, ttt, 8ball...'},
+    {id:'FUN', icon:'🎯', name:'Fun', desc:'joke, quote, ship...'},
+    {id:'PIES', icon:'🖼️', name:'Pies', desc:'pies, india...'},
+    {id:'PREMIUM', icon:'💎', name:'Premium', desc:'premium features'},
+  ];
+  let html='';
+  cats.forEach(c=>{
+    const on = controlData[c.id] !== false;
+    html+=`<div class="cat-toggle"><div class="cat-left"><div class="cat-icon">${c.icon}</div><div class="cat-info"><b>${c.name}</b><small>${c.desc}</small></div></div><label class="switch"><input type="checkbox" ${on?'checked':''} onchange="updateCat('${c.id}', this.checked)"><span class="slider"></span></label></div>`;
+  });
+  document.getElementById('categoriesList').innerHTML=html;
+
+  const quick = ['antilink','welcome','goodbye','antibot','antibadword','autostatus','autoreact','antidelete','anticall','autotyping','antitag','antilink','welcome'];
+  const uniqueQuick = [...new Set(quick)];
+  let qhtml='';
+  uniqueQuick.slice(0,12).forEach(cmd=>{
+    const on = !controlData.disabledCmds?.includes(cmd) && !controlData.disabledCmds?.includes('*all*');
+    qhtml+=`<div class="quick-item"><span>.${cmd}</span><label class="switch"><input type="checkbox" ${on?'checked':''} onchange="updateCmd('${cmd}', this.checked)"><span class="slider"></span></label></div>`;
+  });
+  document.getElementById('quickList').innerHTML=qhtml;
+}
+async function updateCat(id,val){
+  await fetch('/api/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'category',key:id,value:val})});
+  loadControl();
+}
+async function updateCmd(cmd,val){
+  await fetch('/api/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'cmd',key:cmd,value:val})});
+  loadControl();
+}
+async function toggleAll(val){
+  await fetch('/api/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'all',value:val})});
+  loadControl();
+}
+
 async function refreshStatus(){
   try{
     const res=await fetch('/api/status?t='+Date.now()); const d=await res.json();
@@ -146,6 +246,7 @@ async function refreshStatus(){
 }
 document.getElementById('phoneInput').addEventListener('keypress', e=>{ if(e.key==='Enter') generateCode(); });
 refreshStatus(); setInterval(refreshStatus, 3000);
+loadControl(); setInterval(loadControl, 5000);
 </script>
 </body>
-  </html>
+</html>
